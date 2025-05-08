@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bible Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    input, button { padding: 10px; }
+    button { margin-top: 10px; cursor: pointer; }
+    .answer { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Bible Chatbot</h1>
+  <p>Ask me a question about the Bible!</p>
+
+  <input type="text" id="question" placeholder="Type your question here...">
+  <button onclick="askQuestion()">Ask</button>
+
+  <div class="answer" id="answer"></div>
+
+  <script>
+    async function askQuestion() {
+      const question = document.getElementById("question").value;
+      if (!question) {
+        alert("Please enter a question!");
+        return;
+      }
+
+      // Display loading message
+      document.getElementById("answer").innerText = "Fetching answer...";
+
+      try {
+        const response = await fetch("http://localhost:3000/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+        document.getElementById("answer").innerText = data.answer;
+      } catch (err) {
+        console.error("Error:", err);
+        document.getElementById("answer").innerText = "Error processing your request.";
+      }
+    }
+  </script>
+
+</body>
+</html>
